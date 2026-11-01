@@ -100,39 +100,6 @@ jobs:
           cd sources/wine
           make -j"$(nproc)"
 
-      - name: Upload compiled WineCX
-        uses: actions/upload-artifact@v4
-        with:
-          name: winecx-build-${{ inputs.winecx_version }}
-          path: sources/wine/
-          compression-level: 0
-          retention-days: 30
-
-  package:
-    name: Install and Package WineCX
-    needs: build
-    runs-on: ubuntu-latest
-
-    env:
-      WINECX_VERSION: ${{ inputs.winecx_version }}
-
-    steps:
-      - name: Detect Ubuntu release
-        id: platform
-        run: |
-          UBUNTU_CODENAME=$(grep '^UBUNTU_CODENAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
-          if [ -z "$UBUNTU_CODENAME" ]; then
-            UBUNTU_CODENAME=$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
-          fi
-          echo "codename=$UBUNTU_CODENAME" >> "$GITHUB_OUTPUT"
-          echo "Ubuntu codename: $UBUNTU_CODENAME"
-
-      - name: Download compiled WineCX
-        uses: actions/download-artifact@v4
-        with:
-          name: winecx-build-${{ inputs.winecx_version }}
-          path: sources/wine
-
       - name: Install WineCX
         run: |
           cd sources/wine
@@ -140,10 +107,10 @@ jobs:
 
       - name: Create tar.xz archive
         run: |
-          mkdir -p "$GITHUB_WORKSPACE/dist"
           ARCHIVE="winecx-crossover-${WINECX_VERSION}-${{ steps.platform.outputs.codename }}.tar.xz"
+          mkdir $GITHUB_WORKSPACE/dist
           tar -cJf "$GITHUB_WORKSPACE/dist/$ARCHIVE" -C "$GITHUB_WORKSPACE/winecx" .
-          cd "$GITHUB_WORKSPACE/dist"
+          cd $GITHUB_WORKSPACE/dist
           sha256sum "$ARCHIVE" > "$ARCHIVE.sha256sum"
 
       - name: Publish GitHub Release
