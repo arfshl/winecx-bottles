@@ -1,0 +1,127 @@
+
+name: Build WineCX
+
+on:
+  workflow_dispatch:
+    inputs:
+      winecx_version:
+        description: "WineCX source version"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build WineCX
+    runs-on: ubuntu-22.04
+
+    env:
+      WINECX_VERSION: ${{ inputs.winecx_version }}
+
+    steps:
+
+      - name: Detect Ubuntu release
+        id: platform
+        run: |
+          UBUNTU_CODENAME=$(grep '^UBUNTU_CODENAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
+          if [ -z "$UBUNTU_CODENAME" ]; then
+            UBUNTU_CODENAME=$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
+          fi
+          echo "codename=$UBUNTU_CODENAME" >> "$GITHUB_OUTPUT"
+          echo "Ubuntu codename: $UBUNTU_CODENAME"
+
+      - name: Install build dependencies
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt update
+
+          sudo apt install -y \
+            gcc-multilib \
+            libc6-dev-i386 \
+            gcc-mingw-w64 \
+            mingw-w64 \
+            libasound2-dev \
+            bluez \
+            libdbus-1-dev \
+            libpulse-dev \
+            libfontconfig-dev \
+            libfreetype-dev \
+            libgnutls28-dev \
+            libgl-dev \
+            libunwind-dev \
+            libx11-dev \
+            libxcomposite-dev \
+            libxcursor-dev \
+            libxfixes-dev \
+            libxi-dev \
+            libxrandr-dev \
+            libxrender-dev \
+            libxext-dev \
+            libwayland-bin \
+            libwayland-dev \
+            libxkbcommon-dev \
+            libxkbregistry-dev \
+            libegl-dev \
+            libgstreamer1.0-dev \
+            libgstreamer-plugins-base1.0-dev \
+            libsdl2-dev \
+            libudev-dev \
+            libvulkan-dev \
+            libcups2-dev \
+            libgphoto2-dev \
+            libsane-dev \
+            libkrb5-dev \
+            samba-dev \
+            smbclient \
+            ocl-icd-opencl-dev \
+            libpcap-dev \
+            libusb-1.0-0-dev \
+            libv4l-dev \
+            flex \
+            bison \
+            libx11-dev:i386
+
+      - name: Download WineCX source
+        run: |
+          wget -O crossover-sources-${WINECX_VERSION}.tar.gz https://media.codeweavers.com/pub/crossover/source/crossover-sources-${WINECX_VERSION}.tar.gz
+          tar -xzf crossover-sources-${WINECX_VERSION}.tar.gz
+
+      - name: Configure WineCX
+        run: |
+          cd sources/wine
+          ./configure --enable-archs=i386,x86_64 --prefix=/
+
+      - name: Compile WineCX
+        run: |
+          cd sources/wine
+          make -j"$(nproc)"
+
+      - name: Install WineCX
+        run: |
+          cd sources/wine
+          make install DESTDIR="$GITHUB_WORKSPACE/winecx"
+
+      - name: Create tar.xz archive
+        run: |
+          ARCHIVE="winecx-crossover-${WINECX_VERSION}-${{ steps.platform.outputs.codename }}.tar.xz"
+          tar -cJf "$GITHUB_WORKSPACE/dist/$ARCHIVE" -C "$GITHUB_WORKSPACE/winecx" .
+          cd dist
+          sha256sum "$ARCHIVE" > "$ARCHIVE.sha256sum"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: winecx-${{ inputs.winecx_version }}-${{ steps.platform.outputs.codename }}
+          name: WineCX Crossover v${{ inputs.winecx_version }}
+          body: 
+            - Build Environment: Ubuntu ${{ steps.platform.outputs.codename }}
+            - Source: https://media.codeweavers.com/pub/crossover/source/crossover-sources-${{ inputs.winecx_version }}.tar.gz
+          overwrite_files: true
+          files: |
+            dist/*.tar.xz
+            dist/*.sha256sum
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
