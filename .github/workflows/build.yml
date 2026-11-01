@@ -122,5 +122,6 @@ jobs:
             dist/*.tar.xz
             dist/*.sha256sum
           fail_on_unmatched_files: true
+          make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
