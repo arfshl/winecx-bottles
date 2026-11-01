@@ -114,7 +114,7 @@ jobs:
         with:
           tag_name: winecx-${{ inputs.winecx_version }}-${{ steps.platform.outputs.codename }}
           name: WineCX Crossover v${{ inputs.winecx_version }}
-          body: 
+          body: |
             - Build Environment: Ubuntu ${{ steps.platform.outputs.codename }}
             - Source: https://media.codeweavers.com/pub/crossover/source/crossover-sources-${{ inputs.winecx_version }}.tar.gz
           overwrite_files: true
