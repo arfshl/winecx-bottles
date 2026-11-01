@@ -20,6 +20,8 @@ jobs:
       WINECX_VERSION: ${{ inputs.winecx_version }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
 
       - name: Detect Ubuntu release
         id: platform
@@ -89,6 +91,7 @@ jobs:
 
       - name: Configure WineCX
         run: |
+          cp "${GITHUB_WORKSPACE}"/distversion.h "${GITHUB_WORKSPACE}"/sources/wine/programs/winedbg/distversion.h
           cd sources/wine
           ./configure --enable-archs=i386,x86_64 --prefix=/
 
