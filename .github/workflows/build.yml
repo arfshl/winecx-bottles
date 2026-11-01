@@ -116,8 +116,9 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           tag_name: winecx-${{ inputs.winecx_version }}-${{ steps.platform.outputs.codename }}
-          name: WineCX Crossover v${{ inputs.winecx_version }}
+          name: ${{ inputs.winecx_version }}
           body: |
+            WineCX Crossover ${{ inputs.winecx_version }}
             - Build Environment: Ubuntu ${{ steps.platform.outputs.codename }}
             - Source: https://media.codeweavers.com/pub/crossover/source/crossover-sources-${{ inputs.winecx_version }}.tar.gz
           overwrite_files: true
