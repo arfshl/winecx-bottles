@@ -35,7 +35,7 @@ jobs:
               libgphoto2-dev libsane-dev libkrb5-dev samba-dev
               smbclient ocl-icd-opencl-dev libpcap-dev libusb-1.0-0-dev
               libv4l-dev flex bison libx11-dev:i386
-              gettext libpcsclite-dev libpcsclite-dev:i386 libavcodec-dev libavcodec-dev:i386 libavformat-dev libavformat-dev:i386 libavutil-dev libavutil-dev:i386 libswresample-dev libswresample-dev:i386 libswscale-dev libswscale-dev:i386 libcapi20-dev libcapi20-dev:i386 libnetapi-dev
+              gettext libpcsclite-dev libpcsclite-dev:i386 libavcodec-dev libavcodec-dev:i386 libavformat-dev libavformat-dev:i386 libavutil-dev libavutil-dev:i386 libswresample-dev libswresample-dev:i386 libswscale-dev libswscale-dev:i386 libcapi20-dev libcapi20-dev:i386 samba-dev
 
           - build_type: 64bitonly
             configure_flags: "--enable-win64"
@@ -52,7 +52,7 @@ jobs:
               libgphoto2-dev libsane-dev libkrb5-dev samba-dev
               smbclient ocl-icd-opencl-dev libpcap-dev libusb-1.0-0-dev
               libv4l-dev flex bison
-              gettext libpcsclite-dev libpcsclite-dev:i386 libavcodec-dev libavcodec-dev:i386 libavformat-dev libavformat-dev:i386 libavutil-dev libavutil-dev:i386 libswresample-dev libswresample-dev:i386 libswscale-dev libswscale-dev:i386 libcapi20-dev libcapi20-dev:i386 libnetapi-dev
+              gettext libpcsclite-dev libpcsclite-dev:i386 libavcodec-dev libavcodec-dev:i386 libavformat-dev libavformat-dev:i386 libavutil-dev libavutil-dev:i386 libswresample-dev libswresample-dev:i386 libswscale-dev libswscale-dev:i386 libcapi20-dev libcapi20-dev:i386 samba-dev
 
           - build_type: 32bitonly
             configure_flags: ""
@@ -68,7 +68,7 @@ jobs:
               libsdl2-dev:i386 libudev-dev:i386 libvulkan-dev:i386 libcups2-dev:i386
               libgphoto2-dev:i386 libsane-dev:i386 libkrb5-dev:i386 ocl-icd-opencl-dev:i386
               libpcap-dev:i386 libusb-1.0-0-dev:i386 libv4l-dev:i386
-              gettext libpcsclite-dev libpcsclite-dev:i386 libavcodec-dev libavcodec-dev:i386 libavformat-dev libavformat-dev:i386 libavutil-dev libavutil-dev:i386 libswresample-dev libswresample-dev:i386 libswscale-dev libswscale-dev:i386 libcapi20-dev libcapi20-dev:i386 libnetapi-dev
+              gettext libpcsclite-dev libpcsclite-dev:i386 libavcodec-dev libavcodec-dev:i386 libavformat-dev libavformat-dev:i386 libavutil-dev libavutil-dev:i386 libswresample-dev libswresample-dev:i386 libswscale-dev libswscale-dev:i386 libcapi20-dev libcapi20-dev:i386 samba-dev:i386
 
     env:
       WINECX_VERSION: ${{ inputs.winecx_version }}
