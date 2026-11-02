@@ -1,4 +1,4 @@
-winecx wow64 build for bottles flatpak usage, fetched directly from https://media.codeweavers.com/pub/crossover/source/ and builded automatically with github action
+winecx build for bottles flatpak usage, fetched directly from https://media.codeweavers.com/pub/crossover/source/ and builded automatically with github action
 
 provided as-is with no commitment, since this is only explanatory project (primarily for testing microsoft office under bottles flatpak), so no testing before release, no constant update, and no support, i'll try my best to give you version specific build if you want to
 
