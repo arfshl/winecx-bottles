@@ -4,9 +4,9 @@ provided as-is with no commitment, since this is only explanatory project (prima
 
 you just download the archive and extract to bottles flatpak runner directory, like this for example (just follow the versioning or rename it yourself if you want add multiple runner)
 
-mkdir -p ~/.var/app/com.usebottles.bottles/data/bottles/runners/winecx-crossover-26.3.0-jammy-32bitonly
-curl -L https://github.com/arfshl/winecx-bottles/releases/download/winecx-26.3.0-jammy/winecx-crossover-26.3.0-jammy-32bitonly.tar.xz --output /tmp/winecx.tar.xz
-tar -xJf /tmp/winecx.tar.xz -C ~/.var/app/com.usebottles.bottles/data/bottles/runners/winecx-crossover-26.3.0-jammy-32bitonly
+mkdir -p ~/.var/app/com.usebottles.bottles/data/bottles/runners/winecx-crossover-26.3.0-32bitonly
+curl -L https://github.com/arfshl/winecx-bottles/releases/download/winecx-26.3.0-jammy/winecx-crossover-26.3.0-32bitonly.tar.xz --output /tmp/winecx.tar.xz
+tar -xJf /tmp/winecx.tar.xz -C ~/.var/app/com.usebottles.bottles/data/bottles/runners/winecx-crossover-26.3.0-32bitonly
 rm /tmp/winecx.tar.xz
 
 crossover changelog: https://www.codeweavers.com/crossover/changelog

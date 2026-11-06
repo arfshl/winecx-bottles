@@ -77,16 +77,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Detect Ubuntu release
-        id: platform
-        run: |
-          UBUNTU_CODENAME=$(grep '^UBUNTU_CODENAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
-          if [ -z "$UBUNTU_CODENAME" ]; then
-            UBUNTU_CODENAME=$(grep '^VERSION_CODENAME=' /etc/os-release | cut -d'=' -f2 | tr -d '"')
-          fi
-          echo "codename=$UBUNTU_CODENAME" >> "$GITHUB_OUTPUT"
-          echo "Ubuntu codename: $UBUNTU_CODENAME"
-
       - name: Install build dependencies
         run: |
           sudo dpkg --add-architecture i386
@@ -117,12 +107,12 @@ jobs:
       - name: Create tar.xz archive
         id: archive
         run: |
-          ARCHIVE="winecx-crossover-${WINECX_VERSION}-${{ steps.platform.outputs.codename }}-${{ matrix.build_type }}.tar.xz"
+          ARCHIVE="winecx-crossover-${WINECX_VERSION}-${{ matrix.build_type }}.tar.xz"
           mkdir -p $GITHUB_WORKSPACE/dist
           tar -cJf "$GITHUB_WORKSPACE/dist/$ARCHIVE" -C "$GITHUB_WORKSPACE/winecx" .
           cd $GITHUB_WORKSPACE/dist
           sha256sum "$ARCHIVE" > "$ARCHIVE.sha256sum"
-          echo "codename=${{ steps.platform.outputs.codename }}" >> "$GITHUB_OUTPUT"
+          md5sum "$ARCHIVE" > "$ARCHIVE.md5sum"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -151,7 +141,7 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: winecx-${{ inputs.winecx_version }}-${{ steps.platform.outputs.codename }}
+          tag_name: winecx-${{ inputs.winecx_version }}
           name: ${{ inputs.winecx_version }}
           body: |
             WineCX Crossover ${{ inputs.winecx_version }}
@@ -161,6 +151,7 @@ jobs:
           files: |
             dist/*.tar.xz
             dist/*.sha256sum
+            dist/*.md5sum
           fail_on_unmatched_files: true
           make_latest: true
         env:
